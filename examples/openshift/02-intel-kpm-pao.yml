@@ -1,0 +1,36 @@
+apiVersion: performance.openshift.io/v2
+kind: PerformanceProfile
+metadata:
+  name: intel-kpm
+  #annotations:
+  #  # enable unsafe sysctl
+  #  kubeletconfig.experimental: |
+  #    {"allowedUnsafeSysctls":["net.core.somaxconn"]}
+spec:
+  # Intel Power State
+  # https://www.kernel.org/doc/html/v5.0/admin-guide/pm/intel_pstate.
+  # RDT: Intel Resource Director Technology
+  # https://www.kernel.org/doc/html/v5.0/admin-guide/kernel-parameters.html?highlight=rdt
+  additionalKernelArgs:
+  - "audit=0"
+  - "rdt=cmt,mbmtotal,mbmlocal,l3cat,l3cdp,mba"
+  cpu:
+    isolated: 9-127
+    reserved: 0-8
+  hugepages:
+    defaultHugepagesSize: 1G
+    pages:
+    - count: 16
+      node: 0
+      size: 1G
+    - count: 16
+      node: 1
+      size: 1G
+  #numa:
+  #  topologyPolicy: "single-numa-node"
+  #  topologyPolicy: "best-effort"
+  nodeSelector:
+    node-role.kubernetes.io/intel-kpm: ""
+  realTimeKernel:
+    enabled: false
+

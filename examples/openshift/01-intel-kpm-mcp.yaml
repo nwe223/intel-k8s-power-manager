@@ -1,0 +1,20 @@
+---
+# Custom OpenShift MachineConfigPool (MCP)
+apiVersion: machineconfiguration.openshift.io/v1
+kind: MachineConfigPool
+metadata:
+  labels:
+    machineconfiguration.openshift.io/role: intel-kpm
+  name: intel-kpm
+spec:
+  machineConfigSelector:
+    matchExpressions:
+    - key: machineconfiguration.openshift.io/role
+      operator: In
+      values:
+      - worker
+      - intel-kpm
+  nodeSelector:
+    matchLabels:
+      node-role.kubernetes.io/intel-kpm: ""
+  paused: false
